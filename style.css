@@ -1,0 +1,378 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+    background-color: #87CEEB;
+}
+
+body{
+    background-color: white;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-family: "Optima" , sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+.lien_souligne {
+    text-decoration: underline;
+}
+
+.navbar ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.navbar ul li {
+    margin-left: 10px;
+    margin-right: 10px;
+    list-style-type: none;
+}
+
+.navbar ul li a{
+    text-decoration: none;
+    color: black;
+}
+
+/* INDEX */ 
+#banniere{
+    text-align: center;
+}
+
+#banniere p{
+    margin-top: 20px;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    margin-top: 50px;
+}
+
+article {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-top: 20px;
+}
+
+hr{
+    margin-top: 20px;
+    width: 80%;
+    /* margin-left: 80px; */
+}
+
+article img{
+    width: 270px;
+    height: 200px;
+    margin-right: 20px;
+}
+
+article div{
+    width: 350px;
+}
+
+.fleche{
+    width:20px;
+    height: 20px;
+}
+.indexStyle:hover{
+    opacity: 0.8;
+    color: gray;
+}
+
+aside{
+    margin-right: 20px;
+}
+
+aside h4{
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+.horaires{
+    background-color: #87CEEB;
+    border-radius: 25px;
+    padding-left: 10px;
+    width: 250px;
+    height: 200px;
+    padding-top: 10px;
+    margin-top: 20px;
+}
+.horaires p{
+    padding-left: 20px;
+    padding-top: 5px;
+    font-weight: bolder;
+    /* color: white; */
+}
+
+.planSite {
+    background-color: #87CEEB;
+    border-radius: 25px;
+    padding-left: 10px;
+    width: 250px;
+    height: 200px;
+    padding-top: 5px;
+    margin-top: 20px;
+}
+.planSite iframe {
+    margin-left: 20px;
+    border-radius: 20px;
+    width:200px;
+    height: 120px;
+}
+
+.reseauxSociaux{
+    background-color: #87CEEB;
+    border-radius: 25px;
+    padding-left: 10px;
+    width: 250px;
+    height: 150px;
+    padding-top: 5px;
+    margin-top: 20px;
+}
+
+.reseauxSociaux img{
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 25px;
+    margin-left: 20px;
+}
+.reseauxSociaux img:hover{
+    background-color:#fffeee;
+}
+/* PAGE */ 
+.container h1{
+    font-size: 30px;
+    margin-bottom: 20px;
+} 
+
+.rechercher{
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.activite {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 600px;
+}
+
+.activite p{
+    margin-top: 10px;
+    text-align: justify;
+}
+
+.intitule_activite {
+    text-decoration: underline;
+}
+
+.activite h2{
+    margin-top: 10px;
+}
+
+.activite:hover{
+    opacity: 1;
+    color: black;
+}
+/* Pré réservation */ 
+.offreDuMoment{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid black;
+}
+
+.ticket{
+    width: 250px;
+    height: 150px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #87CEEB;
+    border-radius: 20px;
+}
+
+.reservation{
+    padding-top: 20px;
+    padding-left: 20px;
+    text-align: center;
+}
+
+.connexion {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.reservation form {
+    margin-top: 20px;
+}
+
+#reserver {
+    margin-top: 20px;
+    width: 150px;
+    height: 40px;
+    background-color: #87CEEB;
+    border-radius: 20px;
+}
+
+.espace_connexion{
+    text-align: center;
+}
+
+.espace_connexion h2 {
+    margin-bottom: 20px;
+}
+/* INSCRIPTION */ 
+.formulaire_inscription {
+    margin-left: 200px;
+    margin-top: 50px;
+}
+
+#lien_connexion {
+    font-size: 12px;
+    text-decoration: underline;
+}
+/* PROFIL */ 
+.bouton_profil{
+    background-color: #87CEEB;
+    border-radius: 25px;
+    /* color: white; */
+    text-align: center;
+    margin-top: 10px;
+    padding : 5px;
+}
+
+.edition_profil {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.edition_profil table{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.encart_pre_reservation{
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.encart_pre_reservation tr{
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+}
+
+.encart_pre_reservation td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+/* FOOTER */ 
+.footer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
+    width: 1000px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-top: 1px solid black;
+    padding-top: 30px;
+}
+
+.footer ul{
+    width: 250px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.footer ul li{
+    list-style-type: none;
+    margin-top: 5px;
+}
+
+#telephone_parc{
+    background-color: #87CEEB;
+    border-radius: 25px;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+/* SYSTEME DE VOTE */ 
+
+.vote{
+    width: 400px;
+    margin: 20px 0px;
+}
+
+.vote_btns{
+    margin-top : 10px;
+}
+
+input .vote_btn img{
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+input .vote_btn{
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    display: inline;
+    text-align: right;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.vote_btn:hover {
+    color: #FFCA28;
+    background-image: url(image/star.png);
+}
+
+/* ESPACE ADMIN */ 
+.admin_vu {
+    margin-top: 20px;
+}
+.admin_vu h3{
+    margin-bottom: 20px;
+}
+.admin_tableaux tr td{
+   border: 1px solid black ;
+   padding-left: 10px;
+   padding-right: 10px;
+}
+
+.admin_tableaux{
+    border: 1px solid black ; 
+}
+
+.admin_tableaux tr th{
+    border-left: 1px solid black ;
+    border-right: 1px solid black ;
+    padding-left: 10px;
+    padding-right: 10px;
+ }
