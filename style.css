@@ -91,6 +91,10 @@ article div{
     color: gray;
 }
 
+/* #sondageIndex:hover {
+    background-color: cadetblue;
+} */
+
 aside{
     margin-right: 20px;
 }
@@ -326,31 +330,13 @@ aside h4{
     margin: 20px 0px;
 }
 
-.vote_btns{
-    margin-top : 10px;
+#sondageTexte {
+    width: 80%;
 }
 
-input .vote_btn img{
-    width: 30px;
-    height: 30px;
-    margin: 0;
-    padding: 0;
-}
-
-input .vote_btn{
-    border: none;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    display: inline;
-    text-align: right;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.vote_btn:hover {
-    color: #FFCA28;
-    background-image: url(image/star.png);
+.sondageLien{
+    color: cadetblue;
+    font-weight: bold;
 }
 
 /* ESPACE ADMIN */ 
