@@ -1,2 +1,8 @@
 # OlympeParc
-Individual work. Instruction: Create a site for an amusement park. Theme: Greek mythology
+Travail individuel. 
+
+Instruction: Créer le site d'un parc d'attraction. 
+
+Thème : Mythologie Grecque 
+
+Espace connexion, espace de pré-réservation, système de vote anonyme, gestion de base de données. 
