@@ -194,7 +194,13 @@ session_start();
                   <td><?php echo htmlspecialchars($donnees['type_activite']); ?> </td>   <!-- Trier par date-->
                   <td><?php echo htmlspecialchars($donnees['interet_activite']); ?></td>
                   <td><?php echo htmlspecialchars($donnees['contenu_activite']); ?></td>
-                  <td><?php echo htmlspecialchars($donnees['notation_activite']); ?></td>
+                  <td><?php 
+                        $requete = $bdd->query('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                        while($donnees3 = $requete->fetch()) {
+                           echo (round($donnees3['moyenne'], 2)) . "/5";
+                        }
+                     ?>
+                  </td>
                </tr>
          <?php
             }
