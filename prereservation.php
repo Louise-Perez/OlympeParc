@@ -77,17 +77,19 @@ session_start();
             <h1> Pré-réservation </h1>
 
             <div class="offreDuMoment">
-               <button class="ticket">
-                   <img src="image/ticket1.png">
-                   <p>Offre de lancement</p>
-                   <p>Réduction temporaire</p>
-               </button>
-               <button class="ticket">
-                <img src="image/ticket2.png">
-                <p>Pack Famille</p>
-                <p>2 Adultes + 2 Enfants</p>
-               </button>
-            </div>
+            <a href="#" class="ticket">
+                <img src="image/ticket1.png">
+                <p>Offre de lancement</p>
+                <p>Réduction temporaire</p>
+                <p class="fail"> Offre momentanément indisponible</p>
+         </a>
+            <a href="#" class="ticket">
+             <img src="image/ticket2.png">
+             <p>Pack Famille</p>
+             <p>2 Adultes + 2 Enfants</p>
+             <p class="fail"> Offre momentanément indisponible</p>
+            </a>
+         </div>
 
         <?php  if (!empty($_SESSION)) {
         } else {
