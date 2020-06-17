@@ -2,7 +2,7 @@
 session_start();    
     $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
     if(isset($_SESSION['id_membre'])) {
-        $reqmembre = $bdd->prepare("SELECT * FROM membre WHERE id_membre = ?");
+        $reqmembre = $bdd->prepare("SELECT id_membre, nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif FROM membre WHERE id_membre = ?");
         $reqmembre->execute(array($_SESSION['id_membre']));
         $membre = $reqmembre->fetch();
 
@@ -181,11 +181,19 @@ session_start();
         <table class="encart_pre_reservation">
             <?php 
                 $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
-                $reponse = $bdd->query('SELECT * FROM pre_reservation WHERE id_ref_membre="'.$_SESSION['id_membre'].'" ');
+
+                $membreRef = $_SESSION['id_membre']; 
+                $reponse = $bdd->prepare('SELECT id_reservation, date_arrivee, date_depart, nbr_adulte, nbr_enfant, date_reservation, id_ref_membre FROM pre_reservation WHERE id_ref_membre=? ');
+                $reponse->execute(array($membreRef));
+                    
                     if($reponse->rowCount() > 0){
-                        $reponse = $bdd->query('SELECT * FROM pre_reservation WHERE id_ref_membre="'.$_SESSION['id_membre'].'" ');
+                        $membreRef = $_SESSION['id_membre']; 
+                        $reponse = $bdd->prepare('SELECT id_reservation, date_arrivee, date_depart, nbr_adulte, nbr_enfant, date_reservation, id_ref_membre FROM pre_reservation WHERE id_ref_membre=? ');
+                        $reponse->execute(array($membreRef));
                         while ($donnees = $reponse->fetch() ) {
-                            $reponse2 = $bdd->query("SELECT nom_membre, prenom_membre, mail_membre FROM membre INNER JOIN pre_reservation ON membre.id_membre = ".$donnees['id_ref_membre']);
+                            $membreIdRef = $donnees['id_ref_membre'];
+                            $reponse2 = $bdd->prepare("SELECT nom_membre, prenom_membre, mail_membre FROM membre INNER JOIN pre_reservation ON membre.id_membre = ? ");
+                            $reponse2->execute(array($membreIdRef));
                             $donnees2 = $reponse2->fetch();
                         ?>
                             <tr>

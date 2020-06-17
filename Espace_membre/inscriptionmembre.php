@@ -10,50 +10,66 @@ session_start();
       $mdp = sha1($_POST['mdp']);
       $mdp2 = sha1($_POST['mdp2']);
       $age = date('Y') - date('Y', strtotime($naissance_membre));
-      if(!empty($_POST['nom_membre']) AND !empty($_POST['prenom_membre']) AND !empty($_POST['naissance_membre']) 
-      AND !empty($_POST['mail_membre']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']) ){
-         $nom_membre_length = strlen($nom_membre);
-         $prenom_membre_length = strlen($prenom_membre);
-            if ($nom_membre_length <= 255){
-               if($prenom_membre_length <= 255){
-                  if ($age > 17 AND $age < 120) {
-                        if(filter_var($mail_membre, FILTER_VALIDATE_EMAIL)) {
-                           $reqmail_membre = $bdd->prepare('SELECT * FROM membre WHERE mail_membre = ?');
-                           $reqmail_membre->execute(array($mail_membre));
-                           $mail_membreexist = $reqmail_membre->rowCount();
-                           if($mail_membreexist == 0) {
-                              if($mdp == $mdp2) {
-                                 $insertmembre = $bdd->prepare("INSERT INTO membre(nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif) VALUES (?, ?, ?, ?, ?, NOW(), 0)");
-                                 $insertmembre->execute(array($nom_membre, $prenom_membre, $naissance_membre, $mail_membre, $mdp));
-                                 $erreur = "Votre compte a bien été créé ! <a href=\"connexion.php\"> Me connecter </a>";
-                              }
-                              else {
-                                 $erreur = "Vos mots de passes ne correspondent pas !";
-                              }
-                           }
-                        }
-                        else {
-                           $erreur = "Adresse mail déjà utilisée !"; 
-                        }
-                  }
-                  else {
-                     if (($age >= 120) || ($age <= 0))  {
-                        $erreur = "Date de naissance incorrecte";
-                     }
-                     else if ($age <= 17) {
-                        $erreur = "Vous devez être majeur";
-                     }
-                  }
-               }
-               else {
-                  $erreur = "Votre prénom ne doit pas dépasser les 255 caractères !";
-               }
+      
+      
+      if(!empty($_POST['recaptcha-response'])){
+         $url = "https://www.google.com/recaptcha/api/siteverify?secret=6LfCV6UZAAAAALVxkdnJhibcu6yCl3h9hxQ8spNK&response={$_POST['recaptcha-response']}";
+         $response = file_get_contents($url);
+            if(empty($response) || is_null($response)) {
+               header('Location: inscription.php');
+                $erreur = "Seriez vous un robot ? ";
             }
             else {
-               $erreur = "Votre nom ne doit pas dépasser les 255 caractères !";
-            }
-      }
-   }
+               $data = json_decode($response);
+               if ($data-> success) {
+                  if(!empty($_POST['nom_membre']) AND !empty($_POST['prenom_membre']) AND !empty($_POST['naissance_membre']) 
+                  AND !empty($_POST['mail_membre']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']) ){
+                     $nom_membre_length = strlen($nom_membre);
+                     $prenom_membre_length = strlen($prenom_membre);
+                        if ($nom_membre_length <= 255){
+                           if($prenom_membre_length <= 255){
+                                 if ($age > 17 AND $age < 120) {
+                                       if(filter_var($mail_membre, FILTER_VALIDATE_EMAIL)) {
+                                          $reqmail_membre = $bdd->prepare('SELECT  id_membre, nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif FROM membre WHERE mail_membre = ?');
+                                          $reqmail_membre->execute(array($mail_membre));
+                                          $mail_membreexist = $reqmail_membre->rowCount();
+                                             if($mail_membreexist == 0) {
+                                                if($mdp == $mdp2) {
+                                                   $insertmembre = $bdd->prepare("INSERT INTO membre(nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif) VALUES (?, ?, ?, ?, ?, NOW(), 0)");
+                                                   $insertmembre->execute(array($nom_membre, $prenom_membre, $naissance_membre, $mail_membre, $mdp));
+                                                   $erreur = "Votre compte a bien été créé ! <a href=\"connexion.php\"> Me connecter </a>";
+                                                }
+                                                else {
+                                                   $erreur = "Vos mots de passes ne correspondent pas !";
+                                                }
+                                             }
+                                       }
+                                       else {
+                                          $erreur = "Adresse mail déjà utilisée !"; 
+                                       }
+                                 }
+                                 else {
+                                    if (($age >= 120) || ($age <= 0))  {
+                                       $erreur = "Date de naissance incorrecte";
+                                    }
+                                    else if ($age <= 17) {
+                                       $erreur = "Vous devez être majeur";
+                                    }
+                                 }
+                           }
+                           else {
+                              $erreur = "Votre prénom ne doit pas dépasser les 255 caractères !";
+                           }  
+                        }
+                        else {
+                           $erreur = "Votre nom ne doit pas dépasser les 255 caractères !";
+                        }
+                  }
+               }  // data succes 
+            } 
+      } // !empty resposne
+   } // form inscription
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,6 +161,14 @@ session_start();
                            <input type="password" placeholder="Confirmez votre mdp" id="mdp2" name="mdp2"/>
                         </td>
                      </tr>
+                     <!-- reCAPTCHA (je ne suis pas un robot)-->
+                     <tr>
+                           <td align="right">
+                           </td>
+                           <td>
+                              <input type="hidden" id="recaptchaResponse" name="recaptcha-response">
+                           </td>
+                        </tr>
                      <tr>
                         <td></td>
                         <td align="center">
@@ -170,5 +194,14 @@ session_start();
       </section>
 
       <?php include '../Parties/footer.php'; ?>
+
+      <script src="https://www.google.com/recaptcha/api.js?render=6LfCV6UZAAAAAP8mAV1rf51l6hycLnucEAPwBLhU"></script>
+      <script>
+      grecaptcha.ready(function() {
+         grecaptcha.execute('6LfCV6UZAAAAAP8mAV1rf51l6hycLnucEAPwBLhU', {action: 'homepage'}).then(function(token) {
+            document.getElementById("recaptchaResponse").value = token
+         });
+      });
+      </script>
 </body>
 </html>

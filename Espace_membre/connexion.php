@@ -5,7 +5,7 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
         $mail_membreconnect = htmlspecialchars($_POST['mail_membreconnect']);
         $mdpconnect = sha1($_POST['mdpconnect']);
         if (!empty($mail_membreconnect) AND !empty($mdpconnect)){
-            $reqmembre = $bdd->prepare("SELECT * FROM membre WHERE mail_membre = ? AND mdp_membre = ?");
+            $reqmembre = $bdd->prepare("SELECT id_membre, nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif FROM membre WHERE mail_membre = ? AND mdp_membre = ?");
             $reqmembre->execute(array($mail_membreconnect, $mdpconnect));
             $membreexist = $reqmembre->rowCount();
             if ($membreexist == 1){

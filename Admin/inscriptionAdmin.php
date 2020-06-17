@@ -9,7 +9,7 @@ session_start();
       $mdp2 = sha1($_POST['mdp2']);
         if(!empty($_POST['pseudo_admin']) AND !empty($_POST['mail_admin']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']) ){
             if(filter_var($mail_admin, FILTER_VALIDATE_EMAIL)) {
-                $reqmail_admin = $bdd->prepare('SELECT * FROM admin_espace WHERE mail_admin = ?');
+                $reqmail_admin = $bdd->prepare('SELECT id_admin, pseudo_admin, mail_admin, mdp_admin FROM admin_espace WHERE mail_admin = ?');
                 $reqmail_admin->execute(array($mail_admin));
                 $mail_adminexist = $reqmail_admin->rowCount();
                 if($mail_adminexist == 0) {

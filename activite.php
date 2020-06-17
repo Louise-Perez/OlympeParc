@@ -60,9 +60,18 @@ session_start();
             $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
             if (isset($_POST['interet_activite']) AND !empty($_POST['interet_activite'])) {
                 $interet_activite = htmlspecialchars($_POST['interet_activite']);
-                $reponse = $bdd->query('SELECT * FROM activites WHERE type_activite = "Activité" AND interet_activite LIKE "%$interet_activite%"');
+
+                $typeActivite = 'Activité';
+                $interetActivite = "%$interet_activite%";
+                
+                $reponse= $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite FROM activites WHERE type_activite = ? AND interet_activite LIKE ?');
+                $reponse->execute(array($typeActivite, $interetActivite));
+                
                 if($reponse->rowCount() >= 0) {
-                    $reponse = $bdd->query('SELECT * FROM activites WHERE type_activite = "Activité" AND CONCAT(interet_activite) LIKE "%'.$interet_activite.'%"');
+                    $typeActivite = 'Activité';
+                    $interetActivite = "%$interet_activite%";
+                    $reponse = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite FROM activites WHERE type_activite = ? AND CONCAT(interet_activite) LIKE ?');
+                    $reponse->execute(array($typeActivite, $interetActivite));
                         while($donnees = $reponse->fetch()) { ?> 
                             <article class="activite">
                                 <div>
@@ -70,7 +79,8 @@ session_start();
                                     <div class="vote"> <!-- Système de vote --> 
                                         <p> Moyenne des votes du public : </p>
                                         <?php 
-                                        $requete = $bdd->query('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                                        $requete = $bdd->prepare('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                                        $requete->execute();
                                         while($donnees3 = $requete->fetch()) {
                                             echo (round($donnees3['moyenne'], 2)) . "/5";
                                         }
@@ -94,7 +104,9 @@ session_start();
             }
             else {   // Afficher la base de données sans filtre// 
                 $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
-                $reponse = $bdd->query('SELECT * FROM activites WHERE type_activite = "Activité"');
+                $typeActivite = 'Activité';
+                $reponse = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite FROM activites WHERE type_activite = ?');
+                $reponse->execute(array($typeActivite));
                 while ($donnees = $reponse->fetch()){
                 ?>
                     <article class="activite">
@@ -103,7 +115,8 @@ session_start();
                             <div class="vote"> <!-- Système de vote --> 
                                 <p> Moyenne des votes du public : </p>
                                 <?php 
-                                $requete = $bdd->query('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                                $requete = $bdd->prepare('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                                $requete->execute();
                                 while($donnees3 = $requete->fetch()) {
                                     echo (round($donnees3['moyenne'], 2)) . "/5";
                                 }

@@ -6,7 +6,7 @@ session_start();
       $mail_adminconnect = htmlspecialchars($_POST['mail_adminconnect']);
       $mdpadminconnect = sha1($_POST['mdpadminconnect']);
       if (!empty($mail_adminconnect) AND !empty($mdpadminconnect)){
-         $reqadmin = $bdd->prepare("SELECT * FROM admin_espace WHERE mail_admin = ? AND mdp_admin = ?");
+         $reqadmin = $bdd->prepare("SELECT id_admin, pseudo_admin, mail_admin, mdp_admin FROM admin_espace WHERE mail_admin = ? AND mdp_admin = ?");
          $reqadmin->execute(array($mail_adminconnect, $mdpadminconnect));
          $adminexist = $reqadmin->rowCount();
          if ($adminexist == 1){
@@ -63,7 +63,7 @@ session_start();
 
       <?php $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
          if(isset($_SESSION['id_admin'])) {
-         $requser = $bdd->prepare("SELECT * FROM admin_espace WHERE id_admin = ?");
+         $requser = $bdd->prepare("SELECT id_admin, pseudo_admin, mail_admin, mdp_admin FROM admin_espace WHERE id_admin = ?");
          $requser->execute(array($_SESSION['id_admin']));
          $user = $requser->fetch();
          ?> 
@@ -185,7 +185,8 @@ session_start();
 
          <?php   // Afficher les activités// 
             $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
-            $reponse = $bdd->query('SELECT * FROM activites');
+            $reponse = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, taille_minimum, interet_activite, contenu_activite, image_activite, id_ref_admin FROM activites');
+            $reponse->execute();
             while ($donnees = $reponse->fetch()){
             ?>
                <tr>
@@ -195,7 +196,9 @@ session_start();
                   <td><?php echo htmlspecialchars($donnees['interet_activite']); ?></td>
                   <td><?php echo htmlspecialchars($donnees['contenu_activite']); ?></td>
                   <td><?php 
-                        $requete = $bdd->query('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite="'.$donnees['id_activite'].'"');
+                        $activiteRef = $donnees['id_activite'];
+                        $requete = $bdd->prepare('SELECT AVG(notation) AS moyenne FROM notation WHERE id_ref_activite= ?');
+                        $requete->execute(array($activiteRef));
                         while($donnees3 = $requete->fetch()) {
                            echo (round($donnees3['moyenne'], 2)) . "/5";
                         }
@@ -226,9 +229,12 @@ session_start();
             
             <?php   // Afficher les Pré-réservation// 
                $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
-               $reponse = $bdd->query('SELECT * FROM pre_reservation ORDER BY date_reservation');
+               $reponse = $bdd->prepare('SELECT id_reservation, date_arrivee, date_depart, nbr_adulte, nbr_enfant, date_reservation, id_ref_membre  FROM pre_reservation ORDER BY date_reservation');
+               $reponse->execute();
                while ($donnees = $reponse->fetch()){
-                  $reponse2 = $bdd->query("SELECT nom_membre FROM membre INNER JOIN pre_reservation ON membre.id_membre = ".$donnees['id_ref_membre']);
+                  $membreIdRef = $donnees['id_ref_membre'];
+                  $reponse2 = $bdd->prepare("SELECT nom_membre FROM membre INNER JOIN pre_reservation ON membre.id_membre = ?");
+                  $reponse2->execute(array($membreIdRef));
                   $donnees2 = $reponse2->fetch();
             ?>
                   <tr>

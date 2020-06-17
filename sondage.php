@@ -17,7 +17,8 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
        $id_activite = substr($notation, 0, -2);
        $taille = strlen($notation);
        $notation = substr($notation, $taille-1);
-       $reponse2 = $bdd->query('SELECT * FROM activites');
+       $reponse2 = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite FROM activites');
+       $reponse2->execute();
 
        $i = 0;
        while($donnees = $reponse2->fetch()) {
@@ -25,7 +26,8 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
            $i++;
        }
            //Si mon IP est déjà enregistré
-               // $requete = $bdd->query("SELECT * FROM notation where ip_notation = '$ip'");    
+               // $requete = $bdd->prepare("SELECT id_note, notation, ip_notation, id_ref_activite FROM notation where ip_notation = ?"); 
+               // $requete->execute(array($ip));    
                //     if($requete->rowCount() != 0){
                //     echo "Vous avez déja voté";
                // }
@@ -88,9 +90,11 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
 
             <?php   // Afficher la base de données selon le resultat de la recherche// 
                 $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
-                $reponse = $bdd->query('SELECT * FROM activites');
+                $reponse = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite  FROM activites');
+                $reponse->execute();
                 if($reponse->rowCount() >= 0) {
-                    $reponse = $bdd->query('SELECT * FROM activites');
+                    $reponse = $bdd->prepare('SELECT id_activite, nom_activite, type_activite, interet_activite, contenu_activite, image_activite FROM activites');
+                    $reponse->execute();
                     $id_activite_recup = 0; 
                     while($donnees = $reponse->fetch()) { ?> 
 
@@ -113,6 +117,7 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
 
                             <div>
                                 <h2><?php echo htmlspecialchars($donnees['nom_activite']); ?></h2>
+                                <p><span class="intitule_activite">Type</span> : <?php echo htmlspecialchars($donnees['type_activite']); ?></p>
                                 <p><span class="intitule_activite">Interet</span> : <?php echo htmlspecialchars($donnees['interet_activite']); ?></p>
                                 <p><span class="intitule_activite">Description</span> : <br/> 
                                 <?php echo htmlspecialchars($donnees['contenu_activite']); ?> </p>
