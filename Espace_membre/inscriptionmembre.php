@@ -13,7 +13,7 @@ session_start();
       
       
       if(!empty($_POST['recaptcha-response'])){
-         $url = "https://www.google.com/recaptcha/api/siteverify?secret=6LfCV6UZAAAAALVxkdnJhibcu6yCl3h9hxQ8spNK&response={$_POST['recaptcha-response']}";
+         $url = "https://www.google.com/recaptcha/api/siteverify?secret={secret_key}&response={$_POST['recaptcha-response']}";
          $response = file_get_contents($url);
             if(empty($response) || is_null($response)) {
                header('Location: inscription.php');
