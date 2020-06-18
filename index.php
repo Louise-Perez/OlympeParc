@@ -35,6 +35,7 @@ session_start();
 
     <header id="banniere">
         <img src='image/banniere.png'> <!-- Bannièere "Prochainement-->
+   
         <p> Bienvenue au <strong>Mont Olympe</strong> un parc à thème qui vous plongera dans l’univers de la mythologie grecques. 
             Au cours de votre vie vous aurez sans doute entendu parler de l’Odyssée d’Ulysse ou bien de la boite de Pandore, 
             n’attendez plus pour en apprendre d’avantage en vous amusant ! 

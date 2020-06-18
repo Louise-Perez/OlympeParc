@@ -75,6 +75,10 @@ $bdd = new PDO('mysql:host=localhost;dbname=olympeParc', 'root', 'root');
                 <input type="submit" name="formconnexion" value="Se connecter !" />
             </form>
                     <br/> 
+            
+            
+            <a href="mdpOublie.php" class="lien_souligne">Mot de passe oublié ? </a>
+            <br/>
             <a href="inscriptionmembre.php" class="lien_souligne">Vous n'avez pas de compte ? S'inscrire</a>
     </section>
 

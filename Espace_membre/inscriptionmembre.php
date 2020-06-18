@@ -7,48 +7,48 @@ session_start();
       $prenom_membre = htmlspecialchars($_POST['prenom_membre']);
       $naissance_membre = htmlspecialchars($_POST['naissance_membre']);
       $mail_membre = htmlspecialchars($_POST['mail_membre']);
-      $mdp = sha1($_POST['mdp']);
-      $mdp2 = sha1($_POST['mdp2']);
+      $mdp = htmlspecialchars($_POST['mdp']);
+      $mdp2 = htmlspecialchars($_POST['mdp2']);
       $age = date('Y') - date('Y', strtotime($naissance_membre));
-      
-      
       if(!empty($_POST['recaptcha-response'])){
-         $url = "https://www.google.com/recaptcha/api/siteverify?secret={secret_key}&response={$_POST['recaptcha-response']}";
+         $url = "https://www.google.com/recaptcha/api/siteverify?secret=6LfCV6UZAAAAALVxkdnJhibcu6yCl3h9hxQ8spNK&response={$_POST['recaptcha-response']}";
          $response = file_get_contents($url);
             if(empty($response) || is_null($response)) {
                header('Location: inscription.php');
                 $erreur = "Seriez vous un robot ? ";
-            }
-            else {
+            } else {
                $data = json_decode($response);
                if ($data-> success) {
                   if(!empty($_POST['nom_membre']) AND !empty($_POST['prenom_membre']) AND !empty($_POST['naissance_membre']) 
                   AND !empty($_POST['mail_membre']) AND !empty($_POST['mdp']) AND !empty($_POST['mdp2']) ){
-                     $nom_membre_length = strlen($nom_membre);
-                     $prenom_membre_length = strlen($prenom_membre);
-                        if ($nom_membre_length <= 255){
-                           if($prenom_membre_length <= 255){
+                        if (strlen($nom_membre) <= 255){
+                           if(strlen($prenom_membre) <= 255){
                                  if ($age > 17 AND $age < 120) {
                                        if(filter_var($mail_membre, FILTER_VALIDATE_EMAIL)) {
                                           $reqmail_membre = $bdd->prepare('SELECT  id_membre, nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif FROM membre WHERE mail_membre = ?');
                                           $reqmail_membre->execute(array($mail_membre));
                                           $mail_membreexist = $reqmail_membre->rowCount();
                                              if($mail_membreexist == 0) {
-                                                if($mdp == $mdp2) {
-                                                   $insertmembre = $bdd->prepare("INSERT INTO membre(nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif) VALUES (?, ?, ?, ?, ?, NOW(), 0)");
-                                                   $insertmembre->execute(array($nom_membre, $prenom_membre, $naissance_membre, $mail_membre, $mdp));
-                                                   $erreur = "Votre compte a bien été créé ! <a href=\"connexion.php\"> Me connecter </a>";
+                                                if (preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$#', $mdp)) {
+                                                   $mdp = sha1($_POST['mdp']);
+                                                   $mdp2 = sha1($_POST['mdp2']);
+                                                   if($mdp == $mdp2) {
+                                                      $insertmembre = $bdd->prepare("INSERT INTO membre(nom_membre, prenom_membre, naissance_membre, mail_membre, mdp_membre, date_inscription, compte_actif) VALUES (?, ?, ?, ?, ?, NOW(), 0)");
+                                                      $insertmembre->execute(array($nom_membre, $prenom_membre, $naissance_membre, $mail_membre, $mdp));
+                                                      $erreur = "Votre compte a bien été créé ! <a href=\"connexion.php\"> Me connecter </a>";
+                                                   } else {  // $mdp == $mdp2
+                                                      $erreur = "Vos mots de passes ne correspondent pas !";
+                                                   }
+                                                } else {  // caractère special 
+                                                      $erreur = "Votre mot de passe doit contenir au moins 8 caractères et au moins un chiffre, une lettre majuscule et une lettre minuscule";         
                                                 }
-                                                else {
-                                                   $erreur = "Vos mots de passes ne correspondent pas !";
-                                                }
+                                             } else { // mail exist 
+                                                $erreur = "Adresse mail déjà utilisée !"; 
                                              }
-                                       }
-                                       else {
-                                          $erreur = "Adresse mail déjà utilisée !"; 
-                                       }
-                                 }
-                                 else {
+                                          } else {
+                                             $erreur = "Adresse mail déjà utilisée !"; 
+                                          }
+                                 } else { // age non compris entre 17 ete 120  
                                     if (($age >= 120) || ($age <= 0))  {
                                        $erreur = "Date de naissance incorrecte";
                                     }
@@ -56,19 +56,17 @@ session_start();
                                        $erreur = "Vous devez être majeur";
                                     }
                                  }
-                           }
-                           else {
+                           } else { // Longueur prenom
                               $erreur = "Votre prénom ne doit pas dépasser les 255 caractères !";
                            }  
-                        }
-                        else {
+                        }  else { // longueur nom 
                            $erreur = "Votre nom ne doit pas dépasser les 255 caractères !";
                         }
-                  }
-               }  // data succes 
-            } 
-      } // !empty resposne
-   } // form inscription
+                  } else {  $erreur = "Tous n'as pas été posté "; }
+               } else {  $erreur = "Data fail "; }
+            }  // tu n'es pas un robot 
+      } else {  $erreur = "Tu es un robot Bender"; }
+   }
 
 ?>
 <!DOCTYPE html>
@@ -174,14 +172,8 @@ session_start();
                         <td align="center">
                         <br />
                            <input type="submit" name="forminscription" value="Je m'inscris"/>
-                           <?php
-                           if(isset($erreur)) {
-                              echo '<font color="red">'.$erreur."</font>";
-                           }
-                           ?>
                         </td>
                      </tr>
-                     <tr><td></td><td></td></tr>
                      <tr>
                         <td></td>
                         <td align="center">
@@ -191,6 +183,13 @@ session_start();
                      </tr>
                   </table>
                </form>
+               
+               <?php
+                           if(isset($erreur)) {
+                              echo '<p style="text-align:center; width:80%; color:red">'.$erreur."</p>";
+                           }
+                           ?>
+               
       </section>
 
       <?php include '../Parties/footer.php'; ?>
